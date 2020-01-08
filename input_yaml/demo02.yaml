@@ -1,0 +1,25 @@
+---
+base_info:
+  # Unordered set of key: value pairs.
+  product: "产品(#5)"
+  platform: "所有平台(#0)"
+  module: "广告设置(#1302)"
+  tab_page: "引流广告"
+  function: "添加"
+  type: "form"
+
+widget:
+- name: "广告名称" # 字段名称
+  type: "text"
+  precondition: "其他字段合法" # 前置条件,默认空
+  property:
+    required: false # 是否必填项,默认false
+    min_length: 1 # 字符串最小长度,默认0
+    max_length: 64 # 字符串最大长度，默认64
+    lower_case: true # 允许小写字母 默认true
+    upper_case: true # 允许大写字母
+    digit: true # 允许数字
+    chs: true # 允许中文
+    special: # 默认空，允许特殊符号
+      allow: ''
+      deny: '!@#$%^&*(<_+{[;:,./?"\'

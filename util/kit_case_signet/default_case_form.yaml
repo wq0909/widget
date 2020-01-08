@@ -1,0 +1,7 @@
+---
+type: "form"
+rule:
+  - desc: "冒烟用例"
+    tag: 'smoke'
+    step: "所有字段合法"
+    expect: '提交成功'
