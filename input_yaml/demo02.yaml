@@ -23,3 +23,9 @@ widget:
     special: # 默认空，允许特殊符号
       allow: ''
       deny: '!@#$%^&*(<_+{[;:,./?"\'
+- name: 广告类型
+  type: dropdown
+  precondition: 其他字段合法 # 前置条件,默认空
+  property:
+    required: true # 是否必填项,默认true
+    select_options: [动态广告, 静态广告]

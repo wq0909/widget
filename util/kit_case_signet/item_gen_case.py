@@ -99,6 +99,21 @@ def over_length(p):
     return [[step, expect]]
 
 
+def select_options(p):
+    scene_info = []
+    if p['value']:
+        for v in p['value']:
+            step = '{} 选择 {}'.format(p['desc'], v)
+            expect = "提交成功"
+            scene_info.append([step, expect])
+    else:
+        step = '{} 选择 {}'.format(p['desc'], '置空')
+        expect = "错误提示"
+        scene_info.append([step, expect])
+    return scene_info
+
+
+
 def gen_str(lenth):
     result_str = ''
     if lenth > 0:
