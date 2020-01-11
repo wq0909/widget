@@ -1,0 +1,92 @@
+---
+type: 'numeral'
+rule:
+    required:
+      desc: 必填项场景
+      tag: required
+      step:
+        op: 置为
+        value: 空值
+      expect: false
+    positive_number:
+      desc: 正数场景
+      tag: positiveNumber
+      disabled: true # 如果允许正数，则无该用例，因与max重复。
+      step:
+        op: 置为
+        value: 1 # 0+10**(0-n)
+      expect: false
+    negative_number:
+      desc: 负数场景
+      tag: negativeNumber
+      disabled: true # 如果允许负数，则无该用例，因与min重复。
+      step:
+        op: 置为
+        value: -1 # 0-10**(0-n)
+      expect: false
+    zero:
+      desc: 零值场景
+      tag: zero
+      step:
+        op: 置为
+        value: 0
+      expect: true
+    decimal:
+      desc: 小数场景
+      tag: decimal
+      disabled:  false # 如果允许小数，则无该用例，因与min_float_plus_n_decimal_palce重复
+      step:
+        op: 置为
+        value: 0.1 # 最小值+0.1
+      expect: false
+    less_min:
+      desc: 小于最小值场景
+      tag: lessMin
+      step:
+        op: 置为
+        value: -1 # 最大值-10**(0-n)
+      expect: false
+    min:
+      desc: 最小值场景
+      tag: min
+      step:
+        op: 置为
+        value: 0 # 最小值
+      expect: true
+    max:
+      desc: 最大值场景
+      tag: max
+      step:
+        op: 置为
+        value: 1000 # 最大值
+      expect: true
+    over_max:
+      desc: 大于最大值场景
+      tag: overMax
+      step:
+        op: 置为
+        value: 1001 # 最大值+10**(0-n)
+      expect: false
+    min_float_plus_n_decimal_place:
+      desc: 范围值内N位小数场景
+      tag: minFloatPlusDecimalPalce
+      disabled:  true # 如果不允许小数，则无该用例，因与decimal重复
+      step:
+        op: 置为
+        value: 0.01
+      expect: true
+    over_decimal_place:
+      desc: 范围值内N+1位小数场景
+      tag: overDecimalPlace
+      disabled: true # 如果不允许小数，无这个用例
+      step:
+        op: 置为
+        value: 0.001
+      expect: false
+    other_char:
+      desc: 非数值
+      tag: other_char
+      step:
+        op: 置为
+        value: ['a', '=', '#']
+      expect: false

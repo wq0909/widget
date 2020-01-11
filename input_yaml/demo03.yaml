@@ -1,0 +1,21 @@
+---
+base_info:
+  # Unordered set of key: value pairs.
+  product: "产品(#5)"
+  platform: "所有平台(#0)"
+  module: "广告设置(#1302)"
+  tab_page: "引流广告"
+  function: "添加"
+  type: "form"
+
+widget:
+- name: 单价
+  type: numeral
+  precondition: "其他字段合法" # 前置条件,默认空
+  items:
+    required: false # 是否必填项,默认false
+    min: 0 # 最小值,默认0,如果允许小数，请以浮点数形式呈现,小数位数与max保持一致
+    max: 1000 # 最大值，默认1000,如果允许小数，请以浮点数形式呈现,小数位数与min保持一致
+    decimal_place: 2 # 保留小数位数
+
+

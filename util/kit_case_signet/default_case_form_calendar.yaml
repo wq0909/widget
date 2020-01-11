@@ -1,0 +1,18 @@
+---
+type: 'calendar'
+rule:
+    required:
+      desc: 必填项检查  # 为空检查
+      tag: required
+      step:
+        op: 置空值
+        value:
+      expect:
+        success: true  # 期望结果为成功
+        info: 错误提示
+    allow:
+      desc:
+      tag: before_current
+      value: [早于当前时间, 等于当前时间, 晚于当前时间]
+      step:
+      expect: 提交成功

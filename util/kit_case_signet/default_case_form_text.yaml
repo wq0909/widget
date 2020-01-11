@@ -39,13 +39,13 @@ rule:
       expect: "提交成功"
     less_length:
       desc: "不足最小长度检查"
-      tag: "maxLength"
+      tag: "lessLength"
       value: -1
       step: ""
       expect: "错误提示"
     min_length:
       desc: "最小长度检查"
-      tag: "maxLength"
+      tag: "minLength"
       value: 0
       step: ""
       expect: "提交成功"

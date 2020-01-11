@@ -1,6 +1,7 @@
 # coding=utf-8
 import yaml
 import util.kit_case_signet.dir
+import util.kit_case_signet.constants as cons
 from util.deal_csv import DealCsv
 
 
@@ -28,9 +29,9 @@ class GenCase(object):
     case_type = '功能测试'
     case_period = '冒烟测试阶段\n功能测试阶段\n集成测试阶段\n系统测试阶段'
 
-    def gen_custom_case_object(self):
+    def gen_custom_case_object(self, custom_case_conf_file):
         """从用户自定义的yaml中获取被测对象和用例信息"""
-        self.dict_case_custom_spec = get_yaml_data(util.kit_case_signet.dir.INPUT_DIR + 'demo02.yaml')
+        self.dict_case_custom_spec = get_yaml_data(util.kit_case_signet.dir.INPUT_DIR + custom_case_conf_file)
         self.base_info = self.dict_case_custom_spec["base_info"]
         self.base_field = [self.base_info['product'], self.base_info['platform'], self.base_info['module']]
         self.widget = self.dict_case_custom_spec["widget"]
@@ -50,12 +51,21 @@ class GenCase(object):
     def merge_widget_case_info(self, w):
         """将用户自定义信息和默认用例信息合并，结构同默认用例信息，添加一个字段的用例二维列表"""
         self.dict_case_form_widget = get_yaml_data('default_case_form_{}.yaml'.format(w['type']))
-        for (k, v) in w["property"].items():
-            self.dict_case_form_widget['rule'][k]['value'] = v
-            if k == "min_length":
-                self.dict_case_form_widget['rule']['less_length']['value'] = v - 1
-            if k == "max_length":
-                self.dict_case_form_widget['rule']['over_length']['value'] = v + 1
+        obj = __import__("item_merge_case")
+        for (k, v) in w["items"].items():
+            if hasattr(obj, k):
+                # 需要复杂处理的信息，通过反射merge信息
+                func = getattr(obj, k)
+                func(w['name'], k, v, self.dict_case_form_widget, w['items'])
+            else:
+                # 默认merge
+                self.dict_case_form_widget['rule'][k]['value'] = v
+
+
+            # if k == "min_length":
+            #     self.dict_case_form_widget['rule']['less_length']['value'] = v - 1
+            # if k == "max_length":
+            #     self.dict_case_form_widget['rule']['over_length']['value'] = v + 1
 
     def add_widget_case(self, w):
 
@@ -69,15 +79,19 @@ class GenCase(object):
         case_widget.append(title)
         # 行内添加用例前置条件
         case_widget.append(w['precondition'])
-        # 遍历dict_case_form_text，拼装步骤和预期
+        # 遍历dict_case_form_xxxxx，拼装步骤和预期
         step_info = ""
         expect_info = ""
         obj = __import__("item_gen_case")
         index = 1
-        for(scene, item) in self.dict_case_form_widget['rule'].items():
-            if hasattr(obj, scene):
-                func = getattr(obj, scene)
-                scene_info = func(item)
+        for(scene, conf) in self.dict_case_form_widget['rule'].items():
+            if not('disabled' in conf and conf['disabled']):
+                if hasattr(obj, scene):
+                    func = getattr(obj, scene)
+                    scene_info = func(conf)
+                else:
+                    step = '{} {} {}'.format(conf['desc'], conf['step']['op'], conf['step']['value'])
+                    scene_info = [[step, cons.SUCCESS if conf['expect'] else cons.ERROR]]
                 for a_scene_info in scene_info:
                     if step_info:
                         step_info = '{}\n{}. {}'.format(step_info, index, a_scene_info[0])
@@ -100,7 +114,7 @@ class GenCase(object):
     # def add_case_object_widget_dropdown(self, w):
     #     """添加一个字段的用例二维列表"""
     #     self.dict_case_form_widget = get_yaml_data('default_case_form_dropdown.yaml')
-    #     for (k, v) in w["property"].items():
+    #     for (k, v) in w["items"].items():
     #         self.dict_case_form_widget['rule'][k]['value'] = v
     #
     #     # 添加一行用例
@@ -153,7 +167,7 @@ class GenCase(object):
 
 if __name__ == '__main__':
     gc = GenCase()
-    gc.gen_custom_case_object()
+    gc.gen_custom_case_object('demo03.yaml')
     gc.o_csv.file_name = util.kit_case_signet.dir.OUTPUT_DIR + "test.csv"
     gc.o_csv.object2csv()
 

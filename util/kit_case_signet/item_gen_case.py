@@ -1,48 +1,25 @@
 # coding=utf-8
 
+import util.kit_case_signet.constants as cons
+
+
 def required(p):
-    step = '{} {}'.format(p['desc'], p['step'])
-    if p['value']:
-        expect = "错误提示"
-    else:
-        expect = "提交成功"
-    return [[step, expect]]
+    return standard(p)
 
 
 def lower_case(p):
-    step = '{} {}'.format(p['desc'], p['step'])
-    if p['value']:
-        expect = "提交成功"
-    else:
-        expect = "错误提示"
-    return [[step, expect]]
+    return standard(p)
 
 
 def upper_case(p):
-    step = '{} {}'.format(p['desc'], p['step'])
-    if p['value']:
-        expect = "提交成功"
-    else:
-        expect = "错误提示"
-    return [[step, expect]]
+    return standard(p)
 
 def digit(p):
-    step = '{} {}'.format(p['desc'], p['step'])
-    if p['value']:
-        expect = "提交成功"
-    else:
-        expect = "错误提示"
-    return [[step, expect]]
+    return standard(p)
 
 
 def chs(p):
-    step = '{} {}'.format(p['desc'], p['step'])
-    if p['value']:
-        expect = "提交成功"
-    else:
-        expect = "错误提示"
-    return [[step, expect]]
-
+    return standard(p)
 
 def special(p):
     scene_info = []
@@ -60,46 +37,55 @@ def special(p):
 
 
 def less_length(p):
-    scene_info = []
-    if p['value'] >= 0:
-        str = gen_str(p['value'])
-        step = '{} {}'.format(p['desc'], str)
-        expect = "错误提示"
-        scene_info = [[step, expect]]
-    return scene_info
+    return input_is_lenth_string(p, "错误提示")
 
 
 def min_length(p):
-    step = ''
-    expect = ''
-    if p['value'] >= 0:
-        str = gen_str(p['value'])
-        step = '{} {}'.format(p['desc'], str)
-        expect = "提交成功"
-    return [[step, expect]]
+    return input_is_lenth_string(p, "提交成功")
 
 
 def max_length(p):
-    step = ''
-    expect = ''
-    if p['value'] >= 0:
-        str = gen_str(p['value'])
-        step = '{} {}'.format(p['desc'], str)
-        expect = "提交成功"
-    return [[step, expect]]
+    return input_is_lenth_string(p, "提交成功")
 
 
 def over_length(p):
+    return input_is_lenth_string(p, "错误提示")
+
+
+def select_options(p):
+    return value_is_array(p)
+
+
+def positive_number(p):
+    return standard(p)
+
+
+# --------------------------
+def standard(p):
+    step = '{} {} {}'.format(p['desc'], p['step']['op'], p['step']['value'])
+    return [[step, cons.SUCCESS if p['expect'] else cons.ERROR]]
+
+
+def input_is_lenth_string(p, exp):
     step = ''
     expect = ''
     if p['value'] >= 0:
         str = gen_str(p['value'])
         step = '{} {}'.format(p['desc'], str)
+        expect = exp
+    return [[step, expect]]
+
+
+def value_in_step(p):
+    step = '{} {}'.format(p['desc'], p['step'])
+    if p['value']:
+        expect = "提交成功"
+    else:
         expect = "错误提示"
     return [[step, expect]]
 
 
-def select_options(p):
+def value_is_array(p):
     scene_info = []
     if p['value']:
         for v in p['value']:
@@ -113,7 +99,7 @@ def select_options(p):
     return scene_info
 
 
-
+# --------------------------
 def gen_str(lenth):
     result_str = ''
     if lenth > 0:
