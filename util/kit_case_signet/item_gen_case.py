@@ -52,7 +52,7 @@ def over_length(p):
     return input_is_lenth_string(p, "错误提示")
 
 
-def select_options(p):
+def options(p):
     return value_is_array(p)
 
 
@@ -87,8 +87,8 @@ def value_in_step(p):
 
 def value_is_array(p):
     scene_info = []
-    if p['value']:
-        for v in p['value']:
+    if p['step']['value']:
+        for v in p['step']['value']:
             step = '{} 选择 {}'.format(p['desc'], v)
             expect = "提交成功"
             scene_info.append([step, expect])

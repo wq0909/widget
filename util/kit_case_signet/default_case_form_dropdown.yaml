@@ -4,12 +4,14 @@ rule:
     required:
       desc: 必填项检查  #为空检查
       tag: required
-      value: true
-      step: 置空值
-      expect: 错误提示
-    select_options:
+      step:
+        op: 置为
+        value: 空值
+      expect: false
+    options:
       desc: 下拉项
-      tag: select_options
-      value: []
-      step: ""
-      expect: 提交成功
+      tag: options
+      step:
+        op: 选择
+        value: ['']
+      expect: true

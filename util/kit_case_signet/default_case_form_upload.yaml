@@ -1,0 +1,94 @@
+---
+type: 'upload'
+rule:
+    required:
+      desc: 必填项检查  #为空检查
+      tag: required
+      step:
+        op: 置为
+        value: 空值
+      expect: false
+    file_format_allow:
+      desc: 上传文件允许的格式
+      tag: file_format_allow
+      disabled: true # 如果用户没有限定，与其他用例重复
+      step:
+        op: 选择
+        value: ['png', 'jpg', 'jpeg', 'gif', 'bmp', 'doc', 'docx', 'xls', 'xlsx', 'ppt', 'pptx', 'pdf', 'txt', 'log', 'exe']
+      expect: true
+    file_format_deny:
+      desc: 上传文件不允许的格式
+      tag: file_format_deny
+      disabled: true # 如果用户没有限定，就不执行该用例
+      step:
+        op: 选择
+        value: ['png', 'jpg', 'jpeg', 'gif', 'bmp', 'doc', 'docx', 'xls', 'xlsx', 'ppt', 'pptx', 'pdf', 'txt', 'log', 'exe']
+      expect: false
+    file_size_max:
+      desc: 单个上传文件体积最大值
+      tag: file_size_max
+      step:
+        op: 上传单个文件体积为
+        value: 10
+      expect: true
+    file_size_more_max:
+      desc: 单个上传文件体积超过最大值
+      tag: file_size_more_max
+      step:
+        op: 上传单个文件体积为
+        value: 11
+      expect: false
+    file_preview:
+      desc: 上传后文件预览
+      tag: file_format
+      disabled: false # 默认有预览功能
+      step:
+        op: ''
+        value: ''
+      expect: true
+    file_deleted:
+      desc: 文件上传再删除再提交
+      tag: file_deleted
+      step:
+        op: ''
+        value: ''
+      expect: true
+    file_deleted_upload:
+      desc: 文件上传后删除再上传其他文件再提交
+      tag: file_deleted_upload
+      step:
+        op: ''
+        value: ''
+      expect: true
+    amount_min:
+      desc: 至少需要上传的文件数量
+      tag: amount_min
+      disabled:  true # 默认至少上传1个文件,与必填项用例重复
+      step:
+        op: 上传文件数量
+        value: 1
+      expect: true
+    amount_less_min:
+      desc: 少于上传的文件数量最小值
+      tag: amount_less_min
+      disabled:  true # 如果至少上传2个文件，则需要验证传1个文件的场景。如果是0个就与必填项用例重复
+      step:
+        op: 上传文件数量
+        value: 0
+      expect: false
+    amount_max:
+      desc: 至多需要上传的文件数量
+      tag: amount_max
+      disabled:  true # 默认至多上传10个文件
+      step:
+        op: 上传文件数量
+        value: 10
+      expect: true
+    amount_more_max:
+      desc: 大于至多需要上传的文件数量
+      tag: amount_max
+      disabled:  true #
+      step:
+        op: 上传文件数量
+        value: 11
+      expect: false

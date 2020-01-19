@@ -11,6 +11,7 @@ checktools/output/*
 *.rdb
 cfg/default*
 report/*
+!report
 runner.py
 *demo01.yaml
 # Created by .ignore support plugin (hsz.mobi)

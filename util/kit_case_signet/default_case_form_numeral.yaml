@@ -27,12 +27,13 @@ rule:
     zero:
       desc: 零值场景
       tag: zero
+      disabled: false # 如果最大值或最小值为零，则与该用例重复，可置True
       step:
         op: 置为
         value: 0
       expect: true
-    decimal:
-      desc: 小数场景
+    decimal_place:
+      desc: 小数保留位数场景
       tag: decimal
       disabled:  false # 如果允许小数，则无该用例，因与min_float_plus_n_decimal_palce重复
       step:

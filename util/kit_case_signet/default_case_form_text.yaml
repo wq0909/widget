@@ -2,62 +2,72 @@
 type: 'text'
 rule:
     required:
-      desc: "必填项检查"  #为空检查
-      tag: "required"
-      value: false
-      step: "置空值"
-      expect: "提交成功"
+      desc: 必填项检查  #为空检查
+      tag: required
+      step:
+        op: 置为
+        value: 空值
+      expect: false
     lower_case:
-      desc: "小写字母开头" #一位小写字母
-      tag: "lowerCase"
-      value: true
-      step: "a"
-      expect: "提交成功"
+      desc: 小写字母开头 #一位小写字母
+      tag: lower_case
+      step:
+        op: 置为
+        value: a
+      expect: true
     upper_case:
-      desc: "大写字母开头"
-      tag: "upperCase"
-      value: true
-      step: "A"
-      expect: "提交成功"
+      desc: 大写字母开头
+      tag: upper_case
+      step:
+        op: 置为
+        value: A
+      expect: 提交成功
     digit:
-      desc: "数字开头"
-      tag: "digit"
-      value: true
-      step: "1"
-      expect: "提交成功"
+      desc: 数字开头
+      tag: digit
+      step:
+        op: 置为
+        value: 1
+      expect: true
     chs:
-      desc: "中文开头"
-      tag: "chs"
-      value: true
-      step: "我"
-      expect: "提交成功"
+      desc: 中文开头
+      tag: chs
+      step:
+        op: 置为
+        value: 我
+      expect: true
     special:
-      desc: "特殊字符检查"
-      tag: "special"
-      value:
-      step: '!@#$%^&*(<_+{[;:,./?"\'
-      expect: "提交成功"
+      desc: 特殊字符检查
+      tag: special
+      step:
+        op: 置为
+        value: '!@#$%^&*(<_+{[;:,./?"\'
+      expect: true
     less_length:
-      desc: "不足最小长度检查"
-      tag: "lessLength"
-      value: -1
-      step: ""
-      expect: "错误提示"
+      desc: 不足最小长度检查
+      tag: less_length
+      step:
+        op: 长度为
+        value: -1
+      expect: false
     min_length:
-      desc: "最小长度检查"
-      tag: "minLength"
-      value: 0
-      step: ""
-      expect: "提交成功"
+      desc: 最小长度检查
+      tag: min_length
+      step:
+        op: 置为
+        value: 0
+      expect: true
     max_length:
-      desc: "最大长度检查"
-      tag: "maxLength"
-      value: 64
-      step: "一二三四五六七八九十"
-      expect: "提交成功"
+      desc: 最大长度检查
+      tag: max_length
+      step:
+        op: 置为
+        value: 64个字符
+      expect: true
     over_length:
-      desc: "超过最大长度检查"
-      tag: "overLength"
-      value: 65
-      step: '一二三四五六七八九十a'
-      expect: '只能输入N个字符'
+      desc: 超过最大长度检查
+      tag: over_length
+      step:
+        op: 置为
+        value: 64个字符
+      expect: false

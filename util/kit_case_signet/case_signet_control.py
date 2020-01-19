@@ -51,21 +51,23 @@ class GenCase(object):
     def merge_widget_case_info(self, w):
         """将用户自定义信息和默认用例信息合并，结构同默认用例信息，添加一个字段的用例二维列表"""
         self.dict_case_form_widget = get_yaml_data('default_case_form_{}.yaml'.format(w['type']))
-        obj = __import__("item_merge_case")
+        obj = __import__("item_merge_case_{}".format(w['type']))
         for (k, v) in w["items"].items():
-            if hasattr(obj, k):
-                # 需要复杂处理的信息，通过反射merge信息
-                func = getattr(obj, k)
-                func(w['name'], k, v, self.dict_case_form_widget, w['items'])
+            if k in self.dict_case_form_widget['rule']:
+                # 控件属性在默认映射中能匹配到
+                if hasattr(obj, k):
+                    # 需要复杂处理的信息，通过反射merge信息
+                    func = getattr(obj, k)
+                    func(w['name'], k, v, self.dict_case_form_widget, w['items'])
+                else:
+                    # 默认merge
+                    if v:
+                        self.dict_case_form_widget['rule'][k]['step']['value'] = v
+                    else:
+                        raise Exception('控件【{}】的属性【{}】没有值，也没有找到处理方法。'.format(w['name'], k))
             else:
-                # 默认merge
-                self.dict_case_form_widget['rule'][k]['value'] = v
+                raise Exception('控件【{}】无法识别属性【{}】'.format(w['name'], k))
 
-
-            # if k == "min_length":
-            #     self.dict_case_form_widget['rule']['less_length']['value'] = v - 1
-            # if k == "max_length":
-            #     self.dict_case_form_widget['rule']['over_length']['value'] = v + 1
 
     def add_widget_case(self, w):
 
@@ -86,6 +88,7 @@ class GenCase(object):
         index = 1
         for(scene, conf) in self.dict_case_form_widget['rule'].items():
             if not('disabled' in conf and conf['disabled']):
+                # 默认widget配置中无disabled或disabled为True
                 if hasattr(obj, scene):
                     func = getattr(obj, scene)
                     scene_info = func(conf)
@@ -167,7 +170,7 @@ class GenCase(object):
 
 if __name__ == '__main__':
     gc = GenCase()
-    gc.gen_custom_case_object('demo03.yaml')
+    gc.gen_custom_case_object('demo_numeral.yaml')
     gc.o_csv.file_name = util.kit_case_signet.dir.OUTPUT_DIR + "test.csv"
     gc.o_csv.object2csv()
 
