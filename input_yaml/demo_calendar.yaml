@@ -1,0 +1,18 @@
+---
+base_info:
+  # Unordered set of key: value pairs.
+  product: "产品(#5)"
+  platform: "所有平台(#0)"
+  module: "广告设置(#1302)"
+  tab_page: "引流广告"
+  function: "添加"
+  type: "form"
+
+widget:
+- name: 生效时间
+  type: calendar
+  precondition: "其他字段合法" # 前置条件,默认空
+  items: #检查项，控件属性
+    required: True # 是否必填项,默认false
+    allow:  ['2020-01-01 00:00:00']# 允许选择的日期时间
+    deny: ['2019-12-31 23:59:59']# 不允许的日期时间

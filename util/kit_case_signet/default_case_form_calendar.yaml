@@ -5,14 +5,20 @@ rule:
       desc: 必填项检查  # 为空检查
       tag: required
       step:
-        op: 置空值
-        value:
-      expect:
-        success: true  # 期望结果为成功
-        info: 错误提示
+        op: 置
+        value: 空值
+      expect: false #
     allow:
-      desc:
-      tag: before_current
-      value: [早于当前时间, 等于当前时间, 晚于当前时间]
+      desc: 允许的日期前时间
+      tag: allow
       step:
-      expect: 提交成功
+        op: 置
+        value: ['2020-01-01 00:00:00']
+      expect: true #
+    deny:
+      desc: 不允许的日期时间
+      tag: deny
+      step:
+        op: 置
+        value: ['2019-12-31 23:59:59']
+      expect: false #

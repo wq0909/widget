@@ -61,16 +61,14 @@ class GenCase(object):
                     func(w['name'], k, v, self.dict_case_form_widget, w['items'])
                 else:
                     # 默认merge
-                    if v:
+                    if v is not None:
                         self.dict_case_form_widget['rule'][k]['step']['value'] = v
-                    else:
-                        raise Exception('控件【{}】的属性【{}】没有值，也没有找到处理方法。'.format(w['name'], k))
+                    # else:
+                    #     raise Exception('控件【{}】的属性【{}】没有值，也没有找到处理方法。'.format(w['name'], k))
             else:
                 raise Exception('控件【{}】无法识别属性【{}】'.format(w['name'], k))
 
-
     def add_widget_case(self, w):
-
         # 根据dict_case_form_widget,输出字段用例列表
         # 添加行
         case_widget = []
@@ -82,20 +80,39 @@ class GenCase(object):
         # 行内添加用例前置条件
         case_widget.append(w['precondition'])
         # 遍历dict_case_form_xxxxx，拼装步骤和预期
-        step_info = ""
-        expect_info = ""
+        step_info = "" # csv步骤这一格
+        expect_info = "" # csv预期结果这一格
         obj = __import__("item_gen_case")
         index = 1
         for(scene, conf) in self.dict_case_form_widget['rule'].items():
             if not('disabled' in conf and conf['disabled']):
+                scenes = []
+                set_chs = False
+                if 'chs' in w['items'] and w['items']['chs']:
+                    set_chs = True
+                set_digit = False
+                if 'digit' in w['items'] and w['items']['digit']:
+                    set_digit = True
+
                 # 默认widget配置中无disabled或disabled为True
                 if hasattr(obj, scene):
                     func = getattr(obj, scene)
-                    scene_info = func(conf)
+                    scenes = func(conf, set_chs=set_chs, set_digit=set_digit)
                 else:
-                    step = '{} {} {}'.format(conf['desc'], conf['step']['op'], conf['step']['value'])
-                    scene_info = [[step, cons.SUCCESS if conf['expect'] else cons.ERROR]]
-                for a_scene_info in scene_info:
+                    # step = '{} {} {}'.format(conf['desc'], conf['step']['op'], conf['step']['value'])
+                    op_info = []
+                    if conf['step']['value']:
+                        if isinstance(conf['step']['value'], list):
+                            for v in conf['step']['value']:
+                                op_info = '{} {} {}'.format(conf['desc'], conf['step']['op'], v)
+                                scene_info = [op_info, cons.SUCCESS if conf['expect'] else cons.ERROR]
+                                scenes.append(scene_info)
+                        else:
+                            op_info = '{} {} {}'.format(conf['desc'], conf['step']['op'], conf['step']['value'])
+                            scene_info = [op_info, cons.SUCCESS if conf['expect'] else cons.ERROR]
+                            scenes.append(scene_info)
+                        # scenes = [op_info, cons.SUCCESS if conf['expect'] else cons.ERROR]
+                for a_scene_info in scenes:
                     if step_info:
                         step_info = '{}\n{}. {}'.format(step_info, index, a_scene_info[0])
                     else:
@@ -170,7 +187,7 @@ class GenCase(object):
 
 if __name__ == '__main__':
     gc = GenCase()
-    gc.gen_custom_case_object('demo_numeral.yaml')
+    gc.gen_custom_case_object('demo_calendar.yaml')
     gc.o_csv.file_name = util.kit_case_signet.dir.OUTPUT_DIR + "test.csv"
     gc.o_csv.object2csv()
 

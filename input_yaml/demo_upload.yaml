@@ -14,8 +14,8 @@ widget:
   precondition: "其他字段合法" # 前置条件,默认空
   items: #检查项，控件属性
     required: True # 是否必填项,默认false
-    file_format_allow: ['png'] # 允许上传的格式，只识别小写
-    file_format_deny: ['exe'] # 禁止上传的格式，只识别小写
+    file_format_allow: ['png', 'jpg'] # 允许上传的格式，只识别小写
+    file_format_deny: ['exe', 'bin'] # 禁止上传的格式，只识别小写
     file_size_max: 2 # 单个文件大小限制，单位M
     amount_min: 1 # 至少需要上传的文件数量
     amount_max: 5 # 至多允许上传的文件数量

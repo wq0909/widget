@@ -36,37 +36,46 @@ rule:
         op: 置为
         value: 我
       expect: true
-    special:
-      desc: 特殊字符检查
+    special_char_allow:
+      desc: 合法特殊字符检查
       tag: special
+      disabled: true # 如果用户没有限定，与其他用例重复
       step:
         op: 置为
-        value: '!@#$%^&*(<_+{[;:,./?"\'
+        value: ['!', '@', '#', '$', '%', '^', '&', '*', '(', ')', '-', '+', '_', '=', '[', ']', '{', '}', '|', '\', '"', '''', '"', ';', ':', ',', '.', '<', '>', '?', '/', '`', '~']
       expect: true
-    less_length:
+    special_char_deny:
+      desc: 非法特殊字符检查
+      tag: special
+      disabled: true # 如果用户没有限定，就不执行该用例
+      step:
+        op: 置为
+        value: ['!', '@', '#', '$', '%', '^', '&', '*', '(', ')', '-', '+', '_', '=', '[', ']', '{', '}', '|', '\', '"', '''', '"', ';', ':', ',', '.', '<', '>', '?', '/', '`', '~']
+      expect: false
+    length_less_min:
       desc: 不足最小长度检查
-      tag: less_length
+      tag: length_less_min
       step:
         op: 长度为
         value: -1
       expect: false
-    min_length:
+    length_min:
       desc: 最小长度检查
-      tag: min_length
+      tag: length_min
       step:
         op: 置为
         value: 0
       expect: true
-    max_length:
+    length_max:
       desc: 最大长度检查
-      tag: max_length
+      tag: length_max
       step:
         op: 置为
         value: 64个字符
       expect: true
-    over_length:
+    length_more_max:
       desc: 超过最大长度检查
-      tag: over_length
+      tag: length_more_max
       step:
         op: 置为
         value: 64个字符
