@@ -1,0 +1,9 @@
+---
+output_file_format:
+  csv: true
+  xlsx: true
+table:
+  header: ['所属产品', '平台', '所属模块', '用例标题', '前置条件', '步骤', '预期', '关键词', '优先级', '用例类型', '适用阶段']
+  priority: 2
+  type: '功能测试'
+  period: "冒烟测试阶段\n功能测试阶段\n集成测试阶段\n系统测试阶段"

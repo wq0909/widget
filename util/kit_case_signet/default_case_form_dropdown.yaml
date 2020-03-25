@@ -2,7 +2,7 @@
 type: 'dropdown'
 rule:
     required:
-      desc: 必填项检查  #为空检查
+      desc: 必填项检查  # 为空检查
       tag: required
       step:
         op: 置为

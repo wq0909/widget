@@ -7,6 +7,7 @@ base_info:
   tab_page: "引流广告"
   function: "添加"
   type: "form"
+  task: "ceshi"
 
 widget:
 - name: 生效时间

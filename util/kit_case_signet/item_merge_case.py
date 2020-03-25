@@ -1,5 +1,6 @@
 # coding=utf-8
 
+# 已废弃，已拆分成一个控件对应一个py文件
 
 def required(name, k, v, dict_case_form_widget, items):
     # noinspection PyBroadException

@@ -3,6 +3,7 @@ import yaml
 import util.kit_case_signet.dir
 import util.kit_case_signet.constants as cons
 from util.deal_csv import DealCsv
+from util.deal_xlsx import DealXlsx
 
 
 def get_yaml_data(file_path):
@@ -15,6 +16,12 @@ def get_yaml_data(file_path):
 class GenCase(object):
     # 读取yaml
 
+    base_conf = None
+    output_file_format = {}
+    case_header = ""
+    case_priority = 2
+    case_type = '功能测试'
+    case_period = "冒烟测试阶段\n功能测试阶段\n集成测试阶段\n系统测试阶段"
     dict_case_form = None
     dict_case_form_text = None
     dict_case_form_widget = None
@@ -22,18 +29,30 @@ class GenCase(object):
     base_info = ""
     base_field = None
     widget = {}
+    widget_cases = []  # 用例集
 
-    o_csv = DealCsv()
-    o_csv.header = ['所属产品', '平台', '所属模块', '用例标题', '前置条件', '步骤', '预期', '优先级', '用例类型', '适用阶段']
-    case_priority = 2
-    case_type = '功能测试'
-    case_period = '冒烟测试阶段\n功能测试阶段\n集成测试阶段\n系统测试阶段'
+    # o_csv = DealCsv()
+    # o_csv.header = ['所属产品', '平台', '所属模块', '用例标题', '前置条件', '步骤', '预期', '优先级', '用例类型', '适用阶段']
+    # case_priority = 2
+    # case_type = '功能测试'
+    # case_period = '冒烟测试阶段\n功能测试阶段\n集成测试阶段\n系统测试阶段'
+
+    # 获取输出格式和表头信息
+    base_conf = get_yaml_data('base_conf.yaml')
+    output_file_format = base_conf["output_file_format"]
+    case_header = base_conf["table"]["header"]
+    case_key = ""
+    case_priority = base_conf["table"]["priority"]
+    case_type = base_conf["table"]["type"]
+    case_period = base_conf["table"]["period"]
+
 
     def gen_custom_case_object(self, custom_case_conf_file):
         """从用户自定义的yaml中获取被测对象和用例信息"""
         self.dict_case_custom_spec = get_yaml_data(util.kit_case_signet.dir.INPUT_DIR + custom_case_conf_file)
         self.base_info = self.dict_case_custom_spec["base_info"]
         self.base_field = [self.base_info['product'], self.base_info['platform'], self.base_info['module']]
+        self.case_key = self.base_info['task']
         self.widget = self.dict_case_custom_spec["widget"]
         if self.base_info["type"] == "form":
             # 处理表单场景
@@ -45,8 +64,9 @@ class GenCase(object):
         # 遍历处理字段用例
         for w in self.widget:
             self.merge_widget_case_info(w)
-            case_widget = self.add_widget_case(w)
-            self.o_csv.add_body(case_widget)
+            # case_widget = self.add_widget_case(w)
+            # self.o_csv.add_body(case_widget)
+            self.widget_cases.append(self.add_widget_case(w))
 
     def merge_widget_case_info(self, w):
         """将用户自定义信息和默认用例信息合并，结构同默认用例信息，添加一个字段的用例二维列表"""
@@ -114,17 +134,18 @@ class GenCase(object):
                         # scenes = [op_info, cons.SUCCESS if conf['expect'] else cons.ERROR]
                 for a_scene_info in scenes:
                     if step_info:
-                        step_info = '{}\n{}. {}'.format(step_info, index, a_scene_info[0])
+                        step_info = "{}\n{}.{}".format(step_info, index, a_scene_info[0])
                     else:
-                        step_info = '{}. {}'.format(index, a_scene_info[0])
+                        step_info = '{}.{}'.format(index, a_scene_info[0])
                     if expect_info:
-                        expect_info = '{}\n{}. {}'.format(expect_info, index, a_scene_info[1])
+                        expect_info = "{}\n{}.{}".format(expect_info, index, a_scene_info[1])
                     else:
-                        expect_info = '{}. {}'.format(index, a_scene_info[1])
+                        expect_info = '{}.{}'.format(index, a_scene_info[1])
                     index = index + 1
         # 一个控件/字段 的一行用例
         case_widget.append(step_info)
         case_widget.append(expect_info)
+        case_widget.append(self.case_key)
         case_widget.append(self.case_priority)
         case_widget.append(self.case_type)
         case_widget.append(self.case_period)
@@ -188,8 +209,19 @@ class GenCase(object):
 if __name__ == '__main__':
     gc = GenCase()
     gc.gen_custom_case_object('demo_calendar.yaml')
-    gc.o_csv.file_name = util.kit_case_signet.dir.OUTPUT_DIR + "test.csv"
-    gc.o_csv.object2csv()
+    file_name = "test"  # 输出的用例文件名称
+    if gc.output_file_format["csv"]:
+        o_csv = DealCsv()
+        o_csv.header = gc.case_header
+        o_csv.file_name = util.kit_case_signet.dir.OUTPUT_DIR + file_name + ".csv"
+        o_csv.body = gc.widget_cases
+        o_csv.object2csv()
+    if gc.output_file_format["xlsx"]:
+        o_xlsx = DealXlsx()
+        o_xlsx.header = gc.case_header
+        o_xlsx.file_name = util.kit_case_signet.dir.OUTPUT_DIR + file_name + ".xlsx"
+        o_xlsx.body = gc.widget_cases
+        o_xlsx.object2xlsx()
 
 
 
